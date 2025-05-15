@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReviewMe - XYZ Dental Clinic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f8f8;
+        }
+        
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #F9D423 100%);
+        }
+        
+        .iphone-mockup {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNTAiIGhlaWdodD0iNTAwIiB2aWV3Qm94PSIwIDAgMjUwIDUwMCI+PHBhdGggZD0iTTIyNSAxMGMxMi4xIDAgMjIgOS45IDIyIDIydjQzNmMwIDEyLjEtOS45IDIyLTIyIDIySDI1Yy0xMi4xIDAtMjItOS45LTIyLTIyVjMyYzAtMTIuMSA5LjktMjIgMjItMjJoMjAweiIgZmlsbD0iIzAwMCIvPjxwYXRoIGQ9Ik0yMjUgMTBjMTIuMSAwIDIyIDkuOSAyMiAyMnY0MzZjMCAxMi4xLTkuOSAyMi0yMiAyMkgyNWMtMTIuMSAwLTIyLTkuOS0yMi0yMlYzMmMwLTEyLjEgOS45LTIyIDIyLTIyaDIwMHoiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2Q0YWYzNyIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            padding: 40px 15px 60px;
+            width: 250px;
+            height: 500px;
+        }
+        
+        .patient-tile:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .modal-overlay {
+            background-color: rgba(0,0,0,0.7);
+        }
+        
+        .clinic-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #D4AF37 0%, #F9D423 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: black;
+            font-weight: bold;
+            font-size: 24px;
+            border: 2px solid #D4AF37;
+        }
+        
+        @media (max-width: 640px) {
+            .iphone-mockup {
+                width: 200px;
+                height: 400px;
+                padding: 30px 12px 50px;
+            }
+            
+            .clinic-logo {
+                width: 60px;
+                height: 60px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-black text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="gold-gradient w-10 h-10 rounded-full flex items-center justify-center">
+                    <i class="fas fa-star text-black text-xl"></i>
+                </div>
+                <span class="text-xl font-bold">ReviewMe</span>
+            </div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#" class="hover:text-yellow-300 transition">Home</a>
+                <a href="#" class="hover:text-yellow-300 transition">Reports</a>
+                <a href="#" class="hover:text-yellow-300 transition">Blocked Patients</a>
+                <a href="#" class="hover:text-yellow-300 transition">Admin</a>
+                <a href="#" class="hover:text-yellow-300 transition">Sign Out</a>
+            </div>
+            <button class="md:hidden text-xl" id="mobile-menu-button">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden bg-gray-900" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#" class="block px-3 py-2 hover:bg-gray-800 rounded">Home</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-800 rounded">Reports</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-800 rounded">Blocked Patients</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-800 rounded">Admin</a>
+                <a href="#" class="block px-3 py-2 hover:bg-gray-800 rounded">Sign Out</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <h1 class="text-3xl font-bold text-black mb-4 md:mb-0">Patient Dashboard</h1>
+            <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
+                <input type="date" id="date-picker" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                <button id="load-patients" class="gold-gradient text-black font-semibold px-6 py-2 rounded-lg hover:opacity-90 transition shadow-md">
+                    Load Patients
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboard-content">
+            <!-- Physician groups will be inserted here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Patient Modal -->
+    <div id="patient-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden modal-overlay">
+        <div class="bg-white rounded-lg shadow-xl max-w-4xl w-full mx-4 overflow-hidden">
+            <div class="flex justify-between items-center bg-black text-white px-6 py-4">
+                <h2 class="text-xl font-bold" id="modal-patient-name">Patient Name</h2>
+                <button id="close-modal" class="text-white hover:text-yellow-300 text-2xl">&times;</button>
+            </div>
+            
+            <div class="p-6">
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <div class="flex-1">
+                        <div class="iphone-mockup mx-auto">
+                            <div class="flex flex-col h-full">
+                                <!-- XYZ Clinic Logo -->
+                                <div class="clinic-logo">
+                                    XYZ
+                                </div>
+                                
+                                <div class="text-center mb-4">
+                                    <h3 class="font-bold text-lg text-black">XYZ Dental Clinic</h3>
+                                    <p class="text-sm text-gray-600">How was your experience?</p>
+                                </div>
+                                
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div class="bg-gray-100 rounded-lg p-2 flex flex-col items-center">
+                                        <div class="w-16 h-16 rounded-full bg-gray-300 mb-2 overflow-hidden">
+                                            <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Physician" class="w-full h-full object-cover" id="modal-physician-img">
+                                        </div>
+                                        <span class="text-xs font-medium text-center" id="modal-physician-name">Dr. Smith</span>
+                                    </div>
+                                    <div class="bg-gray-100 rounded-lg p-2 flex flex-col items-center">
+                                        <div class="w-16 h-16 rounded-full bg-gray-300 mb-2 overflow-hidden">
+                                            <img src="https://randomuser.me/api/portraits/women/2.jpg" alt="Hygienist" class="w-full h-full object-cover" id="modal-hygienist-img">
+                                        </div>
+                                        <span class="text-xs font-medium text-center" id="modal-hygienist-name">Sarah</span>
+                                    </div>
+                                    <div class="bg-gray-100 rounded-lg p-2 flex flex-col items-center">
+                                        <div class="w-16 h-16 rounded-full bg-gray-300 mb-2 overflow-hidden">
+                                            <img src="https://randomuser.me/api/portraits/women/3.jpg" alt="Assistant" class="w-full h-full object-cover" id="modal-assistant-img">
+                                        </div>
+                                        <span class="text-xs font-medium text-center" id="modal-assistant-name">Emily</span>
+                                    </div>
+                                    <div class="bg-gray-100 rounded-lg p-2 flex flex-col items-center">
+                                        <div class="w-16 h-16 rounded-full bg-gray-300 mb-2 overflow-hidden">
+                                            <img src="https://randomuser.me/api/portraits/men/4.jpg" alt="Front Office" class="w-full h-full object-cover" id="modal-frontoffice-img">
+                                        </div>
+                                        <span class="text-xs font-medium text-center">Front Office</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-auto">
+                                    <p class="text-sm text-gray-700 mb-4 text-center">
+                                        We'd love to hear about your experience at XYZ Dental Clinic. Your feedback helps us improve our services.
+                                    </p>
+                                    <div class="flex justify-center space-x-2 mb-2">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1">
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h3 class="font-bold text-lg text-black mb-4">Send Review Request</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Patient Name</label>
+                                    <p class="text-gray-900" id="modal-patient-name-text">John Doe</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                    <p class="text-gray-900" id="modal-patient-email">john@example.com</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                                    <p class="text-gray-900" id="modal-patient-phone">(123) 456-7890</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Visit Date</label>
+                                    <p class="text-gray-900" id="modal-visit-date">May 15, 2023</p>
+                                </div>
+                                <div class="pt-4">
+                                    <button id="send-review" class="gold-gradient w-full text-black font-semibold px-6 py-3 rounded-lg hover:opacity-90 transition shadow-md">
+                                        <i class="fas fa-paper-plane mr-2"></i> Send Review Request
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="success-toast" class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hidden flex items-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span>Review request sent successfully!</span>
+    </div>
+
+    <script>
+        // Synthetic data - in a real app, this would come from your PostgreSQL database
+        const syntheticData = [
+            {
+                patient_name: "John Smith",
+                email: "john.smith@example.com",
+                phone_number: "(555) 123-4567",
+                physician_name: "Dr. Robert Johnson",
+                hygienist_name: "Sarah Miller",
+                assistant_name: "Emily Davis",
+                patient_image: "https://randomuser.me/api/portraits/men/32.jpg",
+                visit_date: "2023-06-15"
+            },
+            {
+                patient_name: "Emily Wilson",
+                email: "emily.wilson@example.com",
+                phone_number: "(555) 234-5678",
+                physician_name: "Dr. Robert Johnson",
+                hygienist_name: "Sarah Miller",
+                assistant_name: "Michael Brown",
+                patient_image: "https://randomuser.me/api/portraits/women/44.jpg",
+                visit_date: "2023-06-15"
+            },
+            {
+                patient_name: "Michael Thompson",
+                email: "michael.thompson@example.com",
+                phone_number: "(555) 345-6789",
+                physician_name: "Dr. Jessica Lee",
+                hygienist_name: "Jennifer Adams",
+                assistant_name: "David Wilson",
+                patient_image: "https://randomuser.me/api/portraits/men/67.jpg",
+                visit_date: "2023-06-15"
+            },
+            {
+                patient_name: "Sarah Johnson",
+                email: "sarah.johnson@example.com",
+                phone_number: "(555) 456-7890",
+                physician_name: "Dr. Jessica Lee",
+                hygienist_name: "Jennifer Adams",
+                assistant_name: "Emily Davis",
+                patient_image: "https://randomuser.me/api/portraits/women/63.jpg",
+                visit_date: "2023-06-16"
+            },
+            {
+                patient_name: "David Brown",
+                email: "david.brown@example.com",
+                phone_number: "(555) 567-8901",
+                physician_name: "Dr. Mark Williams",
+                hygienist_name: "Lisa Taylor",
+                assistant_name: "Michael Brown",
+                patient_image: "https://randomuser.me/api/portraits/men/85.jpg",
+                visit_date: "2023-06-17"
+            },
+            {
+                patient_name: "Jennifer Davis",
+                email: "jennifer.davis@example.com",
+                phone_number: "(555) 678-9012",
+                physician_name: "Dr. Mark Williams",
+                hygienist_name: "Lisa Taylor",
+                assistant_name: "David Wilson",
+                patient_image: "https://randomuser.me/api/portraits/women/72.jpg",
+                visit_date: "2023-06-17"
+            }
+        ];
+
+        // Staff images - in a real app, these would be loaded from your /Images/ folder
+        const staffImages = {
+            "Dr. Robert Johnson": "https://randomuser.me/api/portraits/men/1.jpg",
+            "Dr. Jessica Lee": "https://randomuser.me/api/portraits/women/2.jpg",
+            "Dr. Mark Williams": "https://randomuser.me/api/portraits/men/3.jpg",
+            "Sarah Miller": "https://randomuser.me/api/portraits/women/4.jpg",
+            "Jennifer Adams": "https://randomuser.me/api/portraits/women/5.jpg",
+            "Lisa Taylor": "https://randomuser.me/api/portraits/women/6.jpg",
+            "Emily Davis": "https://randomuser.me/api/portraits/women/7.jpg",
+            "Michael Brown": "https://randomuser.me/api/portraits/men/8.jpg",
+            "David Wilson": "https://randomuser.me/api/portraits/men/9.jpg"
+        };
+
+        // DOM elements
+        const datePicker = document.getElementById('date-picker');
+        const loadPatientsBtn = document.getElementById('load-patients');
+        const dashboardContent = document.getElementById('dashboard-content');
+        const patientModal = document.getElementById('patient-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const sendReviewBtn = document.getElementById('send-review');
+        const successToast = document.getElementById('success-toast');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        // Set today's date as default
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0];
+        datePicker.value = formattedDate;
+
+        // Mobile menu toggle
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Load patients for selected date
+        loadPatientsBtn.addEventListener('click', () => {
+            const selectedDate = datePicker.value;
+            const patientsForDate = syntheticData.filter(patient => patient.visit_date === selectedDate);
+            
+            if (patientsForDate.length === 0) {
+                dashboardContent.innerHTML = `
+                    <div class="bg-white rounded-lg shadow p-6 text-center">
+                        <i class="fas fa-calendar-times text-4xl text-gray-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-700">No patients found</h3>
+                        <p class="text-gray-500">There are no patients scheduled for ${formatDate(selectedDate)}</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Group patients by physician
+            const patientsByPhysician = {};
+            patientsForDate.forEach(patient => {
+                if (!patientsByPhysician[patient.physician_name]) {
+                    patientsByPhysician[patient.physician_name] = [];
+                }
+                patientsByPhysician[patient.physician_name].push(patient);
+            });
+            
+            // Generate HTML for each physician group
+            let html = '';
+            for (const physician in patientsByPhysician) {
+                html += `
+                    <div class="mb-10">
+                        <h2 class="text-2xl font-bold text-black mb-4 flex items-center">
+                            <span class="gold-gradient w-8 h-8 rounded-full flex items-center justify-center text-black mr-3">${physician.split(' ')[1].charAt(0)}</span>
+                            ${physician}
+                        </h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            ${patientsByPhysician[physician].map(patient => createPatientTile(patient)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            dashboardContent.innerHTML = html;
+            
+            // Add click event to patient tiles
+            document.querySelectorAll('.patient-tile').forEach(tile => {
+                tile.addEventListener('click', () => openPatientModal(tile.dataset.patientId));
+            });
+        });
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Create patient tile HTML
+        function createPatientTile(patient) {
+            return `
+                <div class="patient-tile bg-white rounded-lg shadow-md p-4 cursor-pointer transition duration-300" data-patient-id="${patient.email}">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <img src="${patient.patient_image}" alt="${patient.patient_name}" class="w-16 h-16 rounded-full object-cover border-2 border-yellow-400">
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-lg font-semibold text-black truncate">${patient.patient_name}</h3>
+                            <p class="text-sm text-gray-600 truncate">
+                                <i class="fas fa-envelope mr-1"></i> ${patient.email}
+                            </p>
+                            <p class="text-sm text-gray-600 truncate">
+                                <i class="fas fa-phone mr-1"></i> ${patient.phone_number}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Open patient modal
+        function openPatientModal(patientId) {
+            const patient = syntheticData.find(p => p.email === patientId);
+            if (!patient) return;
+            
+            // Set modal content
+            document.getElementById('modal-patient-name').textContent = patient.patient_name;
+            document.getElementById('modal-patient-name-text').textContent = patient.patient_name;
+            document.getElementById('modal-patient-email').textContent = patient.email;
+            document.getElementById('modal-patient-phone').textContent = patient.phone_number;
+            document.getElementById('modal-visit-date').textContent = formatDate(patient.visit_date);
+            
+            // Set staff images
+            document.getElementById('modal-physician-img').src = staffImages[patient.physician_name] || 'https://randomuser.me/api/portraits/men/1.jpg';
+            document.getElementById('modal-physician-name').textContent = patient.physician_name;
+            document.getElementById('modal-hygienist-img').src = staffImages[patient.hygienist_name] || 'https://randomuser.me/api/portraits/women/2.jpg';
+            document.getElementById('modal-hygienist-name').textContent = patient.hygienist_name;
+            document.getElementById('modal-assistant-img').src = staffImages[patient.assistant_name] || 'https://randomuser.me/api/portraits/women/3.jpg';
+            document.getElementById('modal-assistant-name').textContent = patient.assistant_name;
+            
+            // Show modal
+            patientModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close patient modal
+        closeModalBtn.addEventListener('click', () => {
+            patientModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Send review request
+        sendReviewBtn.addEventListener('click', () => {
+            // In a real app, this would send an email and SMS to the patient
+            // For this demo, we'll just show a success message
+            
+            // Show success toast
+            successToast.classList.remove('hidden');
+            
+            // Hide after 3 seconds
+            setTimeout(() => {
+                successToast.classList.add('hidden');
+            }, 3000);
+            
+            // Close modal
+            patientModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modal when clicking outside
+        patientModal.addEventListener('click', (e) => {
+            if (e.target === patientModal) {
+                patientModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Load patients for today on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadPatientsBtn.click();
+        });
+    </script>
+</body>
+</html>
